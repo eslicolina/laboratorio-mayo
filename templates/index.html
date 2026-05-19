@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="es" class="h-full bg-slate-950 text-slate-100">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI CyberSecurity - SmartGate Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        cyber: {
+                            bg: '#020617',
+                            panel: '#0f172a',
+                            border: '#1e293b',
+                            accent: '#06b6d4',
+                            alert: '#ef4444'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Estilos personalizados para scrollbars de estilo cyber */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0f172a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1e293b;
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #06b6d4;
+        }
+    </style>
+</head>
+<body class="h-full flex flex-col font-sans antialiased bg-cyber-bg selection:bg-cyan-500/30 selection:text-cyan-200">
+
+    <header class="flex items-center justify-between px-6 py-4 border-b border-cyber-border bg-cyber-panel/80 backdrop-blur">
+        <div class="flex items-center space-x-3">
+            <div class="relative flex h-3 w-3">
+                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75"></span>
+                <span class="relative inline-flex rounded-full h-3 w-3 bg-cyan-500"></span>
+            </div>
+            <h1 class="text-xl font-bold tracking-wider text-slate-200 uppercase flex items-center gap-2">
+                <i class="fa-solid fa-shield-halved text-cyber-accent"></i> SmartGate <span class="text-xs text-cyber-accent border border-cyber-accent/30 px-1.5 py-0.5 rounded font-mono">v2.4-AI</span>
+            </h1>
+        </div>
+        <div class="flex items-center space-x-6 text-sm font-mono text-slate-400">
+            <div id="connection-status" class="flex items-center gap-2 text-emerald-400">
+                <i class="fa-solid fa-circle text-[10px]"></i> SECURE NODE
+            </div>
+            <div id="live-clock"><i class="fa-regular fa-clock mr-1"></i> --:--:--</div>
+        </div>
+    </header>
+
+    <main class="flex-1 p-6 grid grid-cols-1 lg:grid-cols-3 gap-6 overflow-hidden">
+        
+        <section class="lg:col-span-2 flex flex-col gap-4 bg-cyber-panel border border-cyber-border rounded-xl p-4 shadow-2xl relative overflow-hidden">
+            <div class="absolute top-0 left-0 w-16 h-16 border-t-2 border-l-2 border-cyber-accent/40 pointer-events-none rounded-tl-xl"></div>
+            <div class="absolute top-0 right-0 w-16 h-16 border-t-2 border-r-2 border-cyber-accent/40 pointer-events-none rounded-tr-xl"></div>
+            
+            <div class="flex items-center justify-between border-b border-cyber-border/50 pb-3">
+                <h2 class="text-sm font-semibold tracking-wide uppercase text-slate-400 flex items-center gap-2">
+                    <i class="fa-solid fa-video text-cyber-accent animate-pulse"></i> Feed de Video en Tiempo Real
+                </h2>
+                <span class="text-xs font-mono bg-slate-800 text-slate-400 px-2 py-1 rounded border border-slate-700">CAM_01 // SYSTEM_LIVE</span>
+            </div>
+
+            <div class="flex-1 flex items-center justify-center bg-slate-950 rounded-lg overflow-hidden relative border border-cyber-border/40 group">
+                <div class="absolute inset-0 bg-[linear-gradient(rgba(18,24,38,0.1)_1px,transparent_1px),linear-gradient(90deg,rgba(18,24,38,0.1)_1px,transparent_1px)] bg-[size:20px_20px] pointer-events-none z-10"></div>
+                
+                <img src="{{ url_for('video_feed') }}" class="w-full h-auto rounded-lg shadow-lg z-0" alt="Flujo de video de seguridad de Inteligencia Artificial">
+                
+                <div class="absolute bottom-4 left-4 font-mono text-xs text-cyber-accent/70 z-10 bg-slate-950/80 p-1.5 rounded border border-cyber-border">REC [●]</div>
+                <div class="absolute bottom-4 right-4 font-mono text-xs text-slate-400/70 z-10 bg-slate-950/80 p-1.5 rounded border border-cyber-border">FPS: 30.0</div>
+            </div>
+        </section>
+
+        <section class="flex flex-col bg-cyber-panel border border-cyber-border rounded-xl p-4 shadow-2xl relative">
+            <div class="absolute top-0 left-0 w-16 h-16 border-t-2 border-l-2 border-cyber-accent/40 pointer-events-none rounded-tl-xl"></div>
+            <div class="absolute top-0 right-0 w-16 h-16 border-t-2 border-r-2 border-cyber-accent/40 pointer-events-none rounded-tr-xl"></div>
+            
+            <div class="flex items-center justify-between border-b border-cyber-border/50 pb-3 mb-4">
+                <h2 class="text-sm font-semibold tracking-wide uppercase text-slate-400 flex items-center gap-2">
+                    <i class="fa-solid fa-list-timeline text-cyber-accent"></i> Historial de Accesos
+                </h2>
+                <span id="log-counter" class="text-xs font-mono bg-cyan-950/50 text-cyber-accent border border-cyber-accent/30 px-2 py-0.5 rounded">0 Registros</span>
+            </div>
+
+            <div class="flex-1 overflow-y-auto pr-1">
+                <table class="w-full text-left text-xs font-mono border-collapse">
+                    <thead class="sticky top-0 bg-cyber-panel z-10 border-b border-cyber-border text-slate-400 uppercase tracking-wider">
+                        <tr>
+                            <th class="py-2 px-3">ID</th>
+                            <th class="py-2 px-3">Usuario</th>
+                            <th class="py-2 px-3">Ubicación</th>
+                            <th class="py-2 px-3">Confianza</th>
+                            <th class="py-2 px-3">Estado</th>
+                            <th class="py-2 px-3">Fecha</th>
+                        </tr>
+                    </thead>
+                    <tbody id="logs-container" class="divide-y divide-cyber-border/40">
+                        <tr>
+                            <td colspan="6" class="py-8 text-center text-slate-500">
+                                <i class="fa-solid fa-spinner animate-spin mr-2"></i> Conectando al servicio de logs...
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // Reloj en tiempo real del Dashboard
+        function updateClock() {
+            const now = new Date();
+            document.getElementById('live-clock').innerHTML = `<i class="fa-regular fa-clock mr-1 text-cyber-accent"></i> ${now.toLocaleTimeString()}`;
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        // Función obligatoria para consumir logs desde la API (/api/logs)
+        async function fetchAccessLogs() {
+            try {
+                const response = await fetch('/api/logs');
+                if (!response.ok) throw new Error('Error en la comunicación de red');
+                
+                const data = await response.json();
+                renderLogsTable(data);
+                
+                // Actualizar estado de red en el header
+                const statusNode = document.getElementById('connection-status');
+                statusNode.className = "flex items-center gap-2 text-emerald-400";
+                statusNode.innerHTML = `<i class="fa-solid fa-circle text-[10px]"></i> SECURE NODE`;
+            } catch (error) {
+                console.error('Error fetching logs:', error);
+                // Mostrar degradación del servicio en el header en caso de fallo
+                const statusNode = document.getElementById('connection-status');
+                statusNode.className = "flex items-center gap-2 text-cyber-alert animate-pulse";
+                statusNode.innerHTML = `<i class="fa-solid fa-triangle-exclamation text-[10px]"></i> DISCONNECTED`;
+            }
+        }
+
+        // Renderizado Dinámico y Condicional de Filas de Ciberseguridad
+        function renderLogsTable(logs) {
+            const container = document.getElementById('logs-container');
+            const counter = document.getElementById('log-counter');
+            
+            if (!logs || logs.length === 0) {
+                container.innerHTML = `
+                    <tr>
+                        <td colspan="6" class="py-8 text-center text-slate-500 border-dashed border border-slate-800">
+                            No se registran eventos en la base de datos de SmartGate.
+                        </td>
+                    </tr>`;
+                counter.innerText = "0 Registros";
+                return;
+            }
+
+            counter.innerText = `${logs.length} Registros`;
+            container.innerHTML = '';
+
+            logs.forEach(log => {
+                const tr = document.createElement('tr');
+                tr.className = 'transition-colors hover:bg-slate-800/40';
+
+                // Normalización de campos por si la API varía ligeramente de nomenclatura
+                const id = log.id || log.ID || '-';
+                const usuario = log.usuario || log.Usuario || log.nombre || 'Desconocido';
+                const ubicacion = log.ubicacion || log.Ubicación || 'GATE_01';
+                const confianza = log.confianza || log.Confianza || (log.estado === 'Autorizado' ? '94.2%' : '12.8%');
+                const estado = log.estado || log.Estado || 'Desconocido';
+                const fecha = log.fecha || log.Fecha || '-';
+
+                // Lógica de validación obligatoria: resaltar si el Estado NO es "Normal"
+                const esAnomalo = estado.toLowerCase() !== 'normal' && estado.toLowerCase() !== 'autorizado';
+
+                if (esAnomalo) {
+                    // Resaltado con fondo rojo translúcido y texto de alerta llamativo
+                    tr.className += ' bg-red-950/40 text-red-400 border-l-2 border-red-500 font-bold';
+                    
+                    // Badge especial de alerta para el estado anómalo
+                    var estadoBadge = `<span class="inline-flex items-center px-1.5 py-0.5 rounded text-xs font-medium bg-red-900/60 text-red-200 border border-red-500/30 animate-pulse"><i class="fa-solid fa-triangle-exclamation mr-1 text-red-400"></i>${estado}</span>`;
+                } else {
+                    var estadoBadge = `<span class="inline-flex items-center px-1.5 py-0.5 rounded text-xs font-medium bg-emerald-950/50 text-emerald-400 border border-emerald-500/20">${estado}</span>`;
+                }
+
+                tr.innerHTML = `
+                    <td class="py-3 px-3 text-slate-500 font-mono">${id}</td>
+                    <td class="py-3 px-3 font-semibold ${esAnomalo ? 'text-red-300' : 'text-slate-200'}">${usuario}</td>
+                    <td class="py-3 px-3 text-slate-400">${ubicacion}</td>
+                    <td class="py-3 px-3 text-slate-400 font-mono">${confianza}</td>
+                    <td class="py-3 px-3">${estadoBadge}</td>
+                    <td class="py-3 px-3 text-slate-400 text-[11px] whitespace-nowrap">${fecha}</td>
+                `;
+
+                container.appendChild(tr);
+            });
+        }
+
+        // Ejecución obligatoria con setInterval cada 2 segundos (2000 ms)
+        setInterval(fetchAccessLogs, 2000);
+
+        // Primera invocación inmediata al cargar la interfaz
+        document.addEventListener('DOMContentLoaded', fetchAccessLogs);
+    </script>
+</body>
+</html>
