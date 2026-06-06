@@ -1,0 +1,141 @@
+/* ═══════════════════════════════════════════
+   Smart Gate AI — Estilos personalizados
+   ═══════════════════════════════════════════ */
+
+/* ── Scrollbar personalizada (cyber) ── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: #0f172a; }
+::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 6px; }
+::-webkit-scrollbar-thumb:hover { background: #334155; }
+
+/* ── Fondo con gradiente radial estilo matriz ── */
+body {
+  background: radial-gradient(ellipse at 50% 0%, #0f172a 0%, #020617 100%);
+}
+
+/* ── Brillo neón para bordes seguro ── */
+.glow {
+  box-shadow: 0 0 18px rgba(0, 255, 198, 0.20), 0 0 40px rgba(0, 255, 198, 0.06);
+}
+.glow-danger {
+  box-shadow: 0 0 18px rgba(255, 77, 77, 0.25), 0 0 40px rgba(255, 77, 77, 0.08);
+}
+
+/* ── Marco tecnológico (4 esquinas) ── */
+.tech-frame {
+  position: relative;
+}
+.tech-frame::before,
+.tech-frame::after {
+  content: '';
+  position: absolute;
+  width: 28px;
+  height: 28px;
+  border-color: rgba(0, 255, 198, 0.5);
+  z-index: 10;
+  pointer-events: none;
+  transition: border-color 0.3s;
+}
+.tech-frame::before {
+  top: 12px;
+  left: 12px;
+  border-top: 2px solid;
+  border-left: 2px solid;
+}
+.tech-frame::after {
+  top: 12px;
+  right: 12px;
+  border-top: 2px solid;
+  border-right: 2px solid;
+}
+.tech-frame .corner-br,
+.tech-frame .corner-bl {
+  position: absolute;
+  width: 28px;
+  height: 28px;
+  border-color: rgba(0, 255, 198, 0.5);
+  z-index: 10;
+  pointer-events: none;
+}
+.tech-frame .corner-br {
+  bottom: 12px;
+  right: 12px;
+  border-bottom: 2px solid;
+  border-right: 2px solid;
+}
+.tech-frame .corner-bl {
+  bottom: 12px;
+  left: 12px;
+  border-bottom: 2px solid;
+  border-left: 2px solid;
+}
+
+/* ── Línea de barrido (scan-line) ── */
+.scan-overlay {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border-radius: 0.75rem;
+  pointer-events: none;
+  z-index: 5;
+}
+.scan-overlay::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, rgba(0, 255, 198, 0.25), transparent);
+  animation: scan 3s linear infinite;
+  filter: blur(1px);
+}
+
+/* ── Rejilla sutil tipo visor ── */
+.scan-overlay::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 255, 198, 0.015) 2px,
+    rgba(0, 255, 198, 0.015) 4px
+  );
+}
+
+/* ── Animación para fila crítica (parpadeo + destello rojo) ── */
+@keyframes row-danger {
+  0%, 100% {
+    background-color: rgba(255, 77, 77, 0.10);
+    border-left: 3px solid rgba(255, 77, 77, 0.3);
+  }
+  50% {
+    background-color: rgba(255, 77, 77, 0.22);
+    border-left: 3px solid rgba(255, 77, 77, 0.7);
+  }
+}
+.row-critical {
+  animation: row-danger 1.2s ease-in-out infinite;
+}
+
+/* ── Efecto de parpadeo suave para el dot de estado ── */
+@keyframes dot-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+.dot-alive {
+  animation: dot-pulse 1.8s ease-in-out infinite;
+}
+
+/* ── Transiciones suaves en hover de fila ── */
+tbody tr {
+  transition: background-color 0.2s ease, border-left 0.2s ease;
+}
+
+/* ── Scan-line keyframe (usado en scan-overlay) ── */
+@keyframes scan {
+  0%   { top: 0%;   opacity: 0.4; }
+  50%  { opacity: 0.8; }
+  100% { top: 100%; opacity: 0.4; }
+}

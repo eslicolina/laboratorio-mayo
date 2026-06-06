@@ -1,8 +1,10 @@
 import sqlite3
 import time
 from datetime import datetime
+import os
 
-
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DB_PATH = os.path.join(BASE_DIR, 'smart_gate.db')
 class Database:
     def __init__(self, db_path='eventos_acceso.db', ubicacion='GATE_01'):
         self.db_path = db_path
